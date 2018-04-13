@@ -1,7 +1,5 @@
 package statistics;
 
-// TODO NESSUNO CHIAMA IL COMPUTE MEAN
-
 import utilities.Clock;
 import utilities.Configuration;
 import utilities.Rvms;
@@ -15,8 +13,6 @@ public class BatchMeans {
     private Welford welford;
 
     private double meanOfBatches;
-    private double devStandard;
-    private double criticalValue;
     private double lowerEndPoint, upperEndPoint;
 
     public BatchMeans(){
@@ -24,7 +20,6 @@ public class BatchMeans {
         this.batchPointer = 1;
         this.welford = new Welford();
         this.meanOfBatches = 0;
-        this.devStandard = 0;
     }
 
     public void batchMeansAlgorithm(double value){
@@ -35,6 +30,7 @@ public class BatchMeans {
 
             /* Update counters and Welford values */
             this.batchPointer++;
+            welford.restoreCounter();
             welford.setMean(0);
             welford.setCount(0);
             welford.setOldMean(0);
@@ -51,26 +47,29 @@ public class BatchMeans {
         for(Double mean : this.meanList) {
             sum = sum + mean;
         }
-        this.meanOfBatches = (1/k) * sum;
+        this.meanOfBatches = ((double)1/k) * sum;
     }
 
-    public void computeDevStandard(){
+    private double computeDevStandard(){
         int k = this.meanList.size();
         double sum = 0;
         for(Double mean : this.meanList) {
             sum = sum + Math.pow(mean - this.meanOfBatches,2);
         }
-        this.devStandard = (1/k) * sum;
+        return Math.sqrt(((double)1/k) * sum);
     }
 
-    public void computeCriticalValue(){
+    private double computeCriticalValue(){
         Rvms rvms = new Rvms();
-        this.criticalValue = rvms.idfStudent(Configuration.batchNumber - 1, 1 - Configuration.alfa/2);
+        return rvms.idfStudent(Configuration.batchNumber - 1, 1 - (Configuration.alfa/2));
     }
 
     public void computeEndpoints(){
-        this.lowerEndPoint = this.meanOfBatches - (this.criticalValue * this.devStandard)/Math.sqrt(Configuration.batchNumber - 1);
-        this.upperEndPoint = this.meanOfBatches + (this.criticalValue * this.devStandard)/Math.sqrt(Configuration.batchNumber - 1);
+        double criticalValue = computeCriticalValue();
+        double devStandard = computeDevStandard();
+
+        this.lowerEndPoint = this.meanOfBatches - (criticalValue * devStandard)/Math.sqrt(Configuration.batchNumber - 1);
+        this.upperEndPoint = this.meanOfBatches + (criticalValue * devStandard)/Math.sqrt(Configuration.batchNumber - 1);
     }
 
     public ArrayList<Double> getMeanList() {
@@ -95,22 +94,6 @@ public class BatchMeans {
 
     public void setMeanOfBatches(double meanOfBatches) {
         this.meanOfBatches = meanOfBatches;
-    }
-
-    public double getDevStandard() {
-        return devStandard;
-    }
-
-    public void setDevStandard(double devStandard) {
-        this.devStandard = devStandard;
-    }
-
-    public double getCriticalValue() {
-        return criticalValue;
-    }
-
-    public void setCriticalValue(double criticalValue) {
-        this.criticalValue = criticalValue;
     }
 
     public double getLowerEndPoint() {

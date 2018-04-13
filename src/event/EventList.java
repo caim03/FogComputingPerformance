@@ -23,7 +23,7 @@ public class EventList {
 
     public Event popEvent(){
         Event event =  this.priorityQueue.poll();
-        this.priorityQueue.remove(event);
+        //this.priorityQueue.remove(event);
         return event;
     }
 
@@ -33,5 +33,9 @@ public class EventList {
 
     public int getSize(){
         return this.priorityQueue.size();
+    }
+
+    public PriorityQueue<Event> getPriorityQueue() {
+        return priorityQueue;
     }
 }

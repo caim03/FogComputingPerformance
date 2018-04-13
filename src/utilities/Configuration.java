@@ -3,8 +3,8 @@ package utilities;
 
 public class Configuration {
     /* System parameters */
-    public static int N = 20;
-    public static int S = 20;
+    public static int N = 3;
+    public static int S = 3;
     public static double lambda1 = 6;
     public static double lambda2 = 6.25;
     public static double mu1Clet = 0.45;
@@ -14,11 +14,11 @@ public class Configuration {
     public static double setup = 0.8;
 
     /* Simulation parameters */
-    public static long stop = 8000;
+    public static double stop = 64000;
     public static long seed = 123456789;
 
     /* Batch means parameters */
     public static int batchNumber = 64;
-    public static long batchSize = stop/batchNumber;
-    public static double alfa;
+    public static double batchSize = stop/batchNumber;
+    public static double alfa = 0.05;
 }

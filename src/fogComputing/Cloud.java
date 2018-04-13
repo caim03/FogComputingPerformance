@@ -80,13 +80,14 @@ public class Cloud {
             /* Set service time and completion time of a task1 */
             RvgsWrapper.getInstance().selectStream(4);
             if(event.getTask() instanceof Task1){
+                this.n1++;
                 event.getTask().setServiceTime(RvgsWrapper.getInstance().exponential(1/Configuration.mu1Cloud));
                 event.getTask().setCompletionTime(event.getTask().getArrivalTime() + event.getTask().getServiceTime());
                 /* Update population */
-                this.n1++;
             }
             /* Set service time and completion time of a task2, but it considers preemption case */
             else{
+                this.n2++;
                 RvgsWrapper.getInstance().selectStream(5);
                 event.getTask().setServiceTime(RvgsWrapper.getInstance().exponential(1/Configuration.mu2Cloud));
 
@@ -102,7 +103,6 @@ public class Cloud {
                 else{
                     event.getTask().setCompletionTime(event.getTask().getArrivalTime() + event.getTask().getServiceTime());
                 }
-                this.n2++;
             }
 
             EventCompletion completionEvent = new EventCompletion(event.getTask());
@@ -127,7 +127,7 @@ public class Cloud {
         computeStatistics(event);
     }
 
-    private void computeStatistics(Event event){
+    public void computeStatistics(Event event){
         /* Update Population Statistics */
         this.batchController.getCloudPopulationTask1().batchMeansAlgorithm(this.n1);
         this.batchController.getCloudPopulationTask2().batchMeansAlgorithm(this.n2);
@@ -145,14 +145,14 @@ public class Cloud {
 
         if (event instanceof EventCompletion){
             this.batchController.getSystemResponseTime().
-                    batchMeansAlgorithm(event.getTask().getServiceTime());
+                    batchMeansAlgorithm(event.getTask().getCompletionTime() - event.getTask().getArrivalTime());
             if(event.getTask() instanceof Task1){
                 this.batchController.getSystemResponseTimeTask1().batchMeansAlgorithm(event.getTask().getServiceTime());
                 this.batchController.getCloudResponseTimeTask1().batchMeansAlgorithm(event.getTask().getServiceTime());
             }
             else{
-                this.batchController.getSystemResponseTimeTask2().batchMeansAlgorithm(event.getTask().getServiceTime());
-                this.batchController.getCloudResponseTimeTask2().batchMeansAlgorithm(event.getTask().getServiceTime());
+                this.batchController.getSystemResponseTimeTask2().batchMeansAlgorithm(event.getTask().getCompletionTime() - event.getTask().getArrivalTime());
+                this.batchController.getCloudResponseTimeTask2().batchMeansAlgorithm(event.getTask().getCompletionTime() - event.getTask().getArrivalTime());
                 if(((Task2)event.getTask()).isPreemptive()){
                     this.batchController.getSystemResponseTimeInterrupted().
                             batchMeansAlgorithm(event.getTask().getCompletionTime() - event.getTask().getArrivalTime());

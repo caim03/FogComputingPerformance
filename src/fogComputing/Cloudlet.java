@@ -26,7 +26,6 @@ public class Cloudlet {
     private Clock clock;
     private BatchController batchController;
 
-
     private Cloudlet(){
         this.n1 = 0;
         this.n2 = 0;
@@ -93,23 +92,22 @@ public class Cloudlet {
         if(event instanceof EventArrival){
             /* Set service time and completion time of a task1 */
             if(event.getTask() instanceof Task1){
+                this.n1++;
                 RvgsWrapper.getInstance().selectStream(2);
                 event.getTask().setServiceTime(RvgsWrapper.getInstance().exponential(1/Configuration.mu1Clet));
                 event.getTask().setCompletionTime(event.getTask().getArrivalTime() + event.getTask().getServiceTime());
-                /* Update population */
-                this.n1++;
             }
             /* Set service time and completion time of a task2 */
             else{
+                this.n2++;
                 RvgsWrapper.getInstance().selectStream(3);
                 event.getTask().setServiceTime(RvgsWrapper.getInstance().exponential(1/Configuration.mu2Clet));
                 event.getTask().setCompletionTime(event.getTask().getArrivalTime() + event.getTask().getServiceTime());
-                /* Update population */
-                this.n2++;
             }
 
             EventCompletion completionEvent = new EventCompletion(event.getTask());
             completionEvent.setTime(event.getTask().getCompletionTime());
+            completionEvent.setCloudlet(true);
             eventList.pushEvent(completionEvent);
             if (completionEvent.getTask() instanceof Task2){
                 this.eventCompletionList.add(completionEvent);
@@ -125,23 +123,22 @@ public class Cloudlet {
                 this.n2CletComplete++;
                 eventCompletionList.remove(event);
             }
+            computeStatistics(event);
         }
 
-        computeStatistics(event);
     }
 
     public void handlePreemption(EventArrival event){
         this.n2Interrupt++;
         this.n2--;
-
         EventCompletion preempEvent;
         EventArrival newEvent;
         Task2 task;
 
         RvgsWrapper.getInstance().selectStream(7);
         long i = RvgsWrapper.getInstance().equilikely(0, eventCompletionList.size()-1);
-
         preempEvent = eventCompletionList.get((int)i);
+
         eventCompletionList.remove(preempEvent);
         eventList.removeEvent(preempEvent);
 
@@ -154,11 +151,9 @@ public class Cloudlet {
         newEvent.setTime(event.getTime());
         newEvent.setCloudlet(false);
         eventList.pushEvent(newEvent);
-
-        //computeStatistics(event);
     }
 
-    private void computeStatistics(Event event){
+    public void computeStatistics(Event event){
         /* Update Population Statistics */
         this.batchController.getCletPopulationTask1().batchMeansAlgorithm(this.n1);
         this.batchController.getCletPopulationTask2().batchMeansAlgorithm(this.n2);

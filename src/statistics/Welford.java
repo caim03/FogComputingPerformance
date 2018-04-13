@@ -19,7 +19,7 @@ public class Welford {
 
     public void updateMean(double value){
         this.oldMean = this.mean;
-        this.mean = this.mean + (value - this.mean)/count;
+        this.mean = this.oldMean + (value - this.oldMean)/count;
     }
 
     public void updateVariance(double value){

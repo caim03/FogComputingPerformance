@@ -11,16 +11,10 @@ import task.Task2;
 import utilities.*;
 
 
-
 public class Main {
 
     public static void main(String[] args) {
         /* --- Initialization --- */
-        long begin, end;
-
-        begin = System.nanoTime();
-
-        System.out.println("\n---------- START SIMULATION ----------\n");
 
         Clock clock = Clock.getIstance();
         EventList eventList = EventList.getInstance();
@@ -32,13 +26,13 @@ public class Main {
         rvgsWrapper.setSeed(Configuration.seed);
 
         /* --- End Initialization --- */
-
-        while (clock.getLastArrival() < Configuration.stop || eventList.getSize() > 0){
+        generateArrival();
+        while (clock.getCurrTime() < Configuration.stop || eventList.getSize() > 0){
 
             /* If arrivals are already allowed */
-            if(clock.getLastArrival() < Configuration.stop){
+            /*if(clock.getCurrTime() < Configuration.stop){
                 generateArrival();
-            }
+            }*/
 
             Event event = eventList.popEvent();
             clock.setCurrTime(event.getTime());
@@ -50,6 +44,9 @@ public class Main {
                 }
                 else{
                     controller.dispatchArrival((EventArrival) event);
+                    if(clock.getCurrTime() < Configuration.stop){  // else, close door time
+                        generateArrival();
+                    }
                 }
             }
             else{
@@ -62,19 +59,17 @@ public class Main {
             }
         }
 
-        /*
         System.out.println(controller.toString());
         System.out.println(cloudlet.toString());
         System.out.println(cloud.toString());
-        */
-
-        end = System.nanoTime();
-        System.out.println("\n" + (end - begin)/1000000000.0 + " seconds");
-
+        BatchController.getInstance().computeMeans();
+        BatchController.getInstance().computeEndPoints();
         System.out.println(BatchController.getInstance().toString());
 
-        System.out.println("\n---------- END SIMULATION ----------\n");
-    }
+        System.out.println("\n PERCENTAGES: \n" +
+        " - Block Probability Task 1: " + (double)controller.getN1Reject()/controller.getN1Arrival() + "\n" +
+        " - Block Probability Task 2: " + (double)controller.getN2Reject()/controller.getN2Arrival() + "\n" +
+        " - Preemption Probability (Percentage of task 2 interrupted): " + (double)cloudlet.getN2Interrupt()/controller.getN2Arrival() + "\n");}
 
     private static void generateArrival(){
         EventArrival event;
@@ -87,16 +82,16 @@ public class Main {
         /* Arrivals are generated in monotonic way */
 
         if(p <= Configuration.lambda1/(Configuration.lambda1 + Configuration.lambda2)){
-            task = new Task1(Clock.getIstance().getLastArrival() + RvgsWrapper.getInstance().exponential(1/(Configuration.lambda1 + Configuration.lambda2)));
+            task = new Task1(Clock.getIstance().getCurrTime() + RvgsWrapper.getInstance().exponential(1/(Configuration.lambda1 + Configuration.lambda2)));
         }
         else{
-            task = new Task2(Clock.getIstance().getLastArrival() + RvgsWrapper.getInstance().exponential(1/(Configuration.lambda1 + Configuration.lambda2)));
+            task = new Task2(Clock.getIstance().getCurrTime() + RvgsWrapper.getInstance().exponential(1/(Configuration.lambda1 + Configuration.lambda2)));
         }
 
         event = new EventArrival(task);
         event.setTime(task.getArrivalTime());
         event.setCloudlet(true);
-        Clock.getIstance().setLastArrival(task.getArrivalTime());
+        //Clock.getIstance().setLastArrival(task.getArrivalTime());
         EventList.getInstance().pushEvent(event);
     }
 }

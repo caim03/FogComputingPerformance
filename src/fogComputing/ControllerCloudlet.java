@@ -64,6 +64,40 @@ public class ControllerCloudlet {
                 cloudlet.handleEvent(event);
             }
         }
+
+        cloudlet.computeStatistics(event);
+    }
+
+    public int getN1Arrival() {
+        return n1Arrival;
+    }
+
+    public void setN1Arrival(int n1Arrival) {
+        this.n1Arrival = n1Arrival;
+    }
+
+    public int getN2Arrival() {
+        return n2Arrival;
+    }
+
+    public void setN2Arrival(int n2Arrival) {
+        this.n2Arrival = n2Arrival;
+    }
+
+    public int getN1Reject() {
+        return n1Reject;
+    }
+
+    public void setN1Reject(int n1Reject) {
+        this.n1Reject = n1Reject;
+    }
+
+    public int getN2Reject() {
+        return n2Reject;
+    }
+
+    public void setN2Reject(int n2Reject) {
+        this.n2Reject = n2Reject;
     }
 
     @Override
