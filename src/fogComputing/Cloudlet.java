@@ -21,10 +21,17 @@ public class Cloudlet {
     private int n2CletComplete;
     private int n2Interrupt;
 
+    private int transN1Complete;
+    private int transN2Complete;
+
     private EventList eventList;
     private ArrayList<EventCompletion> eventCompletionList;
     private Clock clock;
     private BatchController batchController;
+
+    private ArrayList<Double> megaLista;
+
+    private TransientController transientController;
 
     private Cloudlet(){
         this.n1 = 0;
@@ -33,11 +40,18 @@ public class Cloudlet {
         this.n2CletComplete = 0;
         this.n2Interrupt = 0;
 
+        this.transN1Complete = 0;
+        this.transN2Complete = 0;
+
         this.eventList = EventList.getInstance();
         this.clock = Clock.getIstance();
 
         this.eventCompletionList = new ArrayList<>();
         this.batchController = BatchController.getInstance();
+
+        this.transientController = TransientController.getInstance();
+
+        this.megaLista = new ArrayList<>();
     }
 
     public static Cloudlet getInstance(){
@@ -87,6 +101,22 @@ public class Cloudlet {
         this.n2Interrupt = n2Interrupt;
     }
 
+    public int getTransN1Complete() {
+        return transN1Complete;
+    }
+
+    public void setTransN1Complete(int transN1Complete) {
+        this.transN1Complete = transN1Complete;
+    }
+
+    public int getTransN2Complete() {
+        return transN2Complete;
+    }
+
+    public void setTransN2Complete(int transN2Complete) {
+        this.transN2Complete = transN2Complete;
+    }
+
     public void handleEvent(Event event){
         /* Event is arrival */
         if(event instanceof EventArrival){
@@ -117,13 +147,20 @@ public class Cloudlet {
             if(event.getTask() instanceof Task1){
                 this.n1--;
                 this.n1CletComplete++;
+
+                this.transN1Complete++;
             }
             else{
                 this.n2--;
                 this.n2CletComplete++;
+
+                this.transN2Complete++;
+
                 eventCompletionList.remove(event);
             }
+            //this.megaLista.add(event.getTask().getCompletionTime());
             computeStatistics(event);
+            transientThroughput();
         }
 
     }
@@ -166,6 +203,8 @@ public class Cloudlet {
         this.batchController.getCletThroughputTask2()
                 .batchMeansAlgorithm(this.n2CletComplete/this.clock.getCurrTime());
 
+        //this.megaLista.add((this.n2CletComplete)/this.clock.getCurrTime());
+
         this.batchController.getSystemThroughput().
                 batchMeansAlgorithm(((this.n1CletComplete + this.n2CletComplete) +
                         (Cloud.getInstance().getN1CloudComplete() + Cloud.getInstance().getN2CloudComplete()))/clock.getCurrTime());
@@ -188,6 +227,14 @@ public class Cloudlet {
                 this.batchController.getCletResponseTimeTask2().batchMeansAlgorithm(event.getTask().getServiceTime());
             }
         }
+    }
+
+    private void transientThroughput(){
+        transientController.updateTransient(this.transN1Complete, this.transN2Complete, clock.getLastTransient());
+    }
+
+    public ArrayList<Double> getMegaLista() {
+        return megaLista;
     }
 
     @Override

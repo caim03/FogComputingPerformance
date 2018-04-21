@@ -1,5 +1,7 @@
 package statistics;
 
+import utilities.Configuration;
+
 public class BatchController {
     private static BatchController controller = null;
 
@@ -282,30 +284,58 @@ public class BatchController {
         this.cloudPopulationTask2 = cloudPopulationTask2;
     }
 
+
+    public void printLists(){
+        this.systemResponseTime.printMeanList();
+        this.systemResponseTimeTask1.printMeanList();
+        this.systemResponseTimeTask2.printMeanList();
+        this.systemResponseTimeInterrupted.printMeanList();
+
+        this.cletResponseTimeTask1.printMeanList();
+        this.cletResponseTimeTask2.printMeanList();
+
+        this.cloudResponseTimeTask1.printMeanList();
+        this.cloudResponseTimeTask2.printMeanList();
+
+        this.systemThroughput.printMeanList();
+        this.systemThroughputTask1.printMeanList();
+        this.systemThroughputTask2.printMeanList();
+
+        this.cletThroughput.printMeanList();
+        this.cletThroughputTask1.printMeanList();
+        this.cletThroughputTask2.printMeanList();
+
+        this.cletPopulationTask1.printMeanList();
+        this.cletPopulationTask2.printMeanList();
+
+        this.cloudPopulationTask1.printMeanList();
+        this.cloudPopulationTask2.printMeanList();
+    }
+
     @Override
     public String toString() {
-        return "\n--------------------------------------------------------------------------------\n" +
+        return "\n------------------------- SEED = " + Configuration.seed + " ---------------------------------------\n" +
                 " RESPONSE TIMES: \n" +
                 " - System Global: " + this.systemResponseTime.getMeanOfBatches() + " sec | End Points: [" + this.systemResponseTime.getLowerEndPoint() + ", " + this.systemResponseTime.getUpperEndPoint() + "] sec\n" +
                 " - System Task1: " + this.systemResponseTimeTask1.getMeanOfBatches() + " sec | End Points: [" + this.systemResponseTimeTask1.getLowerEndPoint() + ", " + this.systemResponseTimeTask1.getUpperEndPoint() + "] sec\n" +
                 " - System Task2: " + this.systemResponseTimeTask2.getMeanOfBatches() + " sec | End Points: [" + this.systemResponseTimeTask2.getLowerEndPoint() + ", " + this.systemResponseTimeTask2.getUpperEndPoint() + "] sec\n" +
-                " - System Interrupted: " + this.systemResponseTimeInterrupted.getMeanOfBatches() + " | sec End Points: [" + this.systemResponseTimeInterrupted.getLowerEndPoint() + ", " + this.systemResponseTimeInterrupted.getUpperEndPoint() + "] sec\n" +
+                " - System Interrupted: " + this.systemResponseTimeInterrupted.getMeanOfBatches() + " sec | End Points: [" + this.systemResponseTimeInterrupted.getLowerEndPoint() + ", " + this.systemResponseTimeInterrupted.getUpperEndPoint() + "] sec\n" +
                 " - Cloudlet Task1: " + this.cletResponseTimeTask1.getMeanOfBatches() + " sec | End Points: [" + this.cletResponseTimeTask1.getLowerEndPoint() + ", " + this.cletResponseTimeTask1.getUpperEndPoint() + "] sec\n" +
                 " - Cloudlet Task2: " + this.cletResponseTimeTask2.getMeanOfBatches() + " sec | End Points: [" + this.cletResponseTimeTask2.getLowerEndPoint() + ", " + this.cletResponseTimeTask2.getUpperEndPoint() + "] sec\n" +
                 " - Cloud Task1: " + this.cloudResponseTimeTask1.getMeanOfBatches() + " sec | End Points: [" + this.cloudResponseTimeTask1.getLowerEndPoint() + ", " + this.cloudResponseTimeTask1.getUpperEndPoint() + "] sec\n" +
                 " - Cloud Task2: " + this.cloudResponseTimeTask2.getMeanOfBatches() + " sec | End Points: [" + this.cloudResponseTimeTask2.getLowerEndPoint() + ", " + this.cloudResponseTimeTask2.getUpperEndPoint() + "] sec\n\n" +
                 " THROUGHPUT: \n" +
-                " - System Global: " + this.systemThroughput.getMeanOfBatches() + " sec | End Points: [" + this.systemThroughput.getLowerEndPoint() + ", " + this.systemThroughput.getUpperEndPoint() + "] sec\n" +
-                " - System Task1: " + this.systemThroughputTask1.getMeanOfBatches() + " sec | End Points: [" + this.systemThroughputTask1.getLowerEndPoint() + ", " + this.systemThroughputTask1.getUpperEndPoint() + "] sec\n" +
-                " - System Task2: " + this.systemThroughputTask2.getMeanOfBatches() + " sec | End Points: [" + this.systemThroughputTask2.getLowerEndPoint() + ", " + this.systemThroughputTask2.getUpperEndPoint() + "] sec\n" +
-                " - Cloudlet Global: " + this.cletThroughput.getMeanOfBatches() + " sec | End Points: [" + this.cletThroughput.getLowerEndPoint() + ", " + this.cletThroughput.getUpperEndPoint() + "] sec\n" +
-                " - Cloudlet Task1: " + this.cletThroughputTask1.getMeanOfBatches() + " sec | End Points: [" + this.cletThroughputTask1.getLowerEndPoint() + ", " + this.cletThroughputTask1.getUpperEndPoint() + "] sec\n" +
-                " - Cloudlet Task2: " + this.cletThroughputTask2.getMeanOfBatches() + " sec | End Points: [" + this.cletThroughputTask2.getLowerEndPoint() + ", " + this.cletThroughputTask2.getUpperEndPoint() + "] sec\n\n" +
+                " - System Global: " + this.systemThroughput.getMeanOfBatches() + " task/sec | End Points: [" + this.systemThroughput.getLowerEndPoint() + ", " + this.systemThroughput.getUpperEndPoint() + "] sec\n" +
+                " - System Task1: " + this.systemThroughputTask1.getMeanOfBatches() + " task/sec | End Points: [" + this.systemThroughputTask1.getLowerEndPoint() + ", " + this.systemThroughputTask1.getUpperEndPoint() + "] sec\n" +
+                " - System Task2: " + this.systemThroughputTask2.getMeanOfBatches() + " task/sec | End Points: [" + this.systemThroughputTask2.getLowerEndPoint() + ", " + this.systemThroughputTask2.getUpperEndPoint() + "] sec\n" +
+                " - Cloudlet Global: " + this.cletThroughput.getMeanOfBatches() + " task/sec | End Points: [" + this.cletThroughput.getLowerEndPoint() + ", " + this.cletThroughput.getUpperEndPoint() + "] sec\n" +
+                " - Cloudlet Task1: " + this.cletThroughputTask1.getMeanOfBatches() + " task/sec | End Points: [" + this.cletThroughputTask1.getLowerEndPoint() + ", " + this.cletThroughputTask1.getUpperEndPoint() + "] sec\n" +
+                " - Cloudlet Task2: " + this.cletThroughputTask2.getMeanOfBatches() + " task/sec | End Points: [" + this.cletThroughputTask2.getLowerEndPoint() + ", " + this.cletThroughputTask2.getUpperEndPoint() + "] sec\n\n" +
                 " POPULATION: \n" +
-                " - Cloudlet Task1: " + this.cletPopulationTask1.getMeanOfBatches() + " sec | End Points: [" + this.cletPopulationTask1.getLowerEndPoint() + ", " + this.cletPopulationTask1.getUpperEndPoint() + "] sec\n" +
-                " - Cloudlet Task2: " + this.cletPopulationTask2.getMeanOfBatches() + " sec | End Points: [" + this.cletPopulationTask2.getLowerEndPoint() + ", " + this.cletPopulationTask2.getUpperEndPoint() + "] sec\n" +
-                " - Cloud Task1: " + this.cloudPopulationTask1.getMeanOfBatches() + " sec | End Points: [" + this.cloudPopulationTask1.getLowerEndPoint() + ", " + this.cloudPopulationTask1.getUpperEndPoint() + "] sec\n" +
-                " - Cloud Task2: " + this.cloudPopulationTask2.getMeanOfBatches() + " sec | End Points: [" + this.cloudPopulationTask2.getLowerEndPoint() + ", " + this.cloudPopulationTask2.getUpperEndPoint() + "] sec\n" +
+                " - Cloudlet Task1: " + this.cletPopulationTask1.getMeanOfBatches() + " | End Points: [" + this.cletPopulationTask1.getLowerEndPoint() + ", " + this.cletPopulationTask1.getUpperEndPoint() + "] sec\n" +
+                " - Cloudlet Task2: " + this.cletPopulationTask2.getMeanOfBatches() + " | End Points: [" + this.cletPopulationTask2.getLowerEndPoint() + ", " + this.cletPopulationTask2.getUpperEndPoint() + "] sec\n" +
+                " - Cloud Task1: " + this.cloudPopulationTask1.getMeanOfBatches() + " | End Points: [" + this.cloudPopulationTask1.getLowerEndPoint() + ", " + this.cloudPopulationTask1.getUpperEndPoint() + "] sec\n" +
+                " - Cloud Task2: " + this.cloudPopulationTask2.getMeanOfBatches() + " | End Points: [" + this.cloudPopulationTask2.getLowerEndPoint() + ", " + this.cloudPopulationTask2.getUpperEndPoint() + "] sec\n" +
                 "--------------------------------------------------------------------------------";
 
     }

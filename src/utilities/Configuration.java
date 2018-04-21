@@ -3,8 +3,8 @@ package utilities;
 
 public class Configuration {
     /* System parameters */
-    public static int N = 3;
-    public static int S = 3;
+    public static int N = 20;
+    public static int S = 20;
     public static double lambda1 = 6;
     public static double lambda2 = 6.25;
     public static double mu1Clet = 0.45;
