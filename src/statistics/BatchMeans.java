@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class BatchMeans {
     private ArrayList<Double> meanList;
-    private ArrayList<Double> megaLista;
     private int batchPointer;
 
     private Welford welford;
@@ -18,7 +17,6 @@ public class BatchMeans {
 
     public BatchMeans(){
         this.meanList = new ArrayList<>();
-        this.megaLista = new ArrayList<>();
         this.batchPointer = 1;
         this.welford = new Welford();
         this.meanOfBatches = 0;
@@ -38,14 +36,9 @@ public class BatchMeans {
             welford.setOldMean(0);
         }
 
-        this.megaLista.add(value);
         /* Send new value to Welford Algorithm */
         welford.incrementCount();
         welford.updateMean(value);
-    }
-
-    public ArrayList<Double> getMegaLista() {
-        return megaLista;
     }
 
     public void computeMean(){

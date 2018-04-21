@@ -29,10 +29,6 @@ public class Cloudlet {
     private Clock clock;
     private BatchController batchController;
 
-    private ArrayList<Double> megaLista;
-
-    private TransientController transientController;
-
     private Cloudlet(){
         this.n1 = 0;
         this.n2 = 0;
@@ -48,10 +44,6 @@ public class Cloudlet {
 
         this.eventCompletionList = new ArrayList<>();
         this.batchController = BatchController.getInstance();
-
-        this.transientController = TransientController.getInstance();
-
-        this.megaLista = new ArrayList<>();
     }
 
     public static Cloudlet getInstance(){
@@ -160,7 +152,6 @@ public class Cloudlet {
             }
             //this.megaLista.add(event.getTask().getCompletionTime());
             computeStatistics(event);
-            transientThroughput();
         }
 
     }
@@ -227,14 +218,6 @@ public class Cloudlet {
                 this.batchController.getCletResponseTimeTask2().batchMeansAlgorithm(event.getTask().getServiceTime());
             }
         }
-    }
-
-    private void transientThroughput(){
-        transientController.updateTransient(this.transN1Complete, this.transN2Complete, clock.getLastTransient());
-    }
-
-    public ArrayList<Double> getMegaLista() {
-        return megaLista;
     }
 
     @Override

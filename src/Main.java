@@ -4,7 +4,6 @@ import event.EventList;
 import fogComputing.Cloud;
 import fogComputing.Cloudlet;
 import fogComputing.ControllerCloudlet;
-import fogComputing.TransientController;
 import statistics.BatchController;
 import task.Task;
 import task.Task1;
@@ -12,7 +11,6 @@ import task.Task2;
 import utilities.*;
 
 import java.io.*;
-import java.util.ArrayList;
 
 
 public class Main {
@@ -75,20 +73,6 @@ public class Main {
         " - Block Probability Task 1: " + (double)controller.getN1Reject()/controller.getN1Arrival() + "\n" +
         " - Block Probability Task 2: " + (double)controller.getN2Reject()/controller.getN2Arrival() + "\n" +
         " - Preemption Probability (Percentage of task 2 interrupted): " + (double)cloudlet.getN2Interrupt()/controller.getN2Arrival() + "\n");
-
-        //BatchController.getInstance().printLists();
-
-        //ArrayList<Double> megaLista = BatchController.getInstance().getSystemThroughputTask2().getMegaLista();
-
-        /*for(int i=1; i < cloudlet.getMegaLista().size(); i++){
-            newLista.add(cloudlet.getMegaLista().get(i) - cloudlet.getMegaLista().get(i-1));
-        }*/
-
-        /*BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream("filename.txt"), "utf-8"));
-        for(int i=0; i < megaLista.size(); i++){
-            writer.write(String.valueOf(megaLista.get(i)) + "\n");
-        }*/
     }
 
 
